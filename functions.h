@@ -3,8 +3,15 @@
 
 // Matrix Creation functions
 int getRandomNumber();
-int **createMatrix();
-void deleteMatrix(int **a);
-void printMatrix(int **a);
+void deleteMatrix(int **a, int length);
+void printMatrix(int **a, int length);
+int **createMatrix(int n);
+
+// Brute force matrix multiplication 
+
+// Regular Divide and conquer algorithm
+
+// Straussen's Algorithm
+
 
 #endif

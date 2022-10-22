@@ -11,9 +11,9 @@ int main() {
     cin >> nLength;
     cout << endl;
     
-    int **testMatrix = createMatrix();
+    int **testMatrix = createMatrix(nLength);
 
-    deleteMatrix(testMatrix);
+    deleteMatrix(testMatrix, nLength);
 
     cout << endl;
     system("Pause");
