@@ -37,7 +37,6 @@ int **createMatrix(int n) {
         }
     }
 
-    printMatrix(tempArray2D, n);
     return tempArray2D;
 }
 
