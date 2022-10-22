@@ -22,7 +22,6 @@ void printMatrix(int **a, int length) {
         cout << endl;
     }
 
-    
 }
 
 int **createMatrix(int n) {
