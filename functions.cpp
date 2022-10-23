@@ -15,6 +15,7 @@ int getRandomNumber() {
 }
 
 void printMatrix(int **a, int length) {
+    // cout << "Printing" << endl;
     for(int i = 0; i < length; i++) {
         for(int j = 0; j < length; j++) {
             cout << a[i][j] << " ";
@@ -60,6 +61,34 @@ void deleteMatrix(int **a, int length) {
     delete [] a;
 }
 
+int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
+    // cout << "Error 1" << endl;
+    int newSize = (colEnd - colStart) + 1;
+    int **newMatrix = new int*[newSize];
+    for(int i = 0; i < newSize; i++){
+        newMatrix[i] = new int[newSize];
+    }
+    int i = 0;
+    int j = 0;
+    int rowTemp = rowStart;
+    int colTemp = 0;
+    while(rowTemp <= rowEnd) {
+        // cout << "MAKING MATRIX" << endl;
+        j = 0;
+        colTemp = colStart;
+        while(colTemp <= colEnd) {
+            // cout << "Filling matrix" << endl;
+            newMatrix[i][j] = matrix[rowTemp][colTemp];
+            colTemp++;
+            j++;
+        }
+        rowTemp++;
+        i++;
+    }
+    // cout << "Bout to return" << endl;
+    return newMatrix; 
+}
+
 // Brute force matrix multiplication
 void matrixMultiply(int **a, int **b, int **product, int sizeN) {
     // For each row of matrix A, we must multiply with each column of matrix B
@@ -77,8 +106,14 @@ void matrixMultiply(int **a, int **b, int **product, int sizeN) {
 }
 
 // Regular Divide and conquer algorithm
-// int **matixMultiplyDivideAndConquer(int **a, int **b, int sizeN) {
-
+// int **matixMultiplyDC(int **a, int **b, int** product, int sizeN) {
+    
+//     if(sizeN == 0) {
+//         product[sizeN][sizeN] = a[sizeN][sizeN] * b[sizeN][sizeN]; 
+//     }
+//     else {
+        
+//     }
 // }
 
 // Straussen's Algorithm

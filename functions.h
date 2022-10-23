@@ -8,11 +8,14 @@ void printMatrix(int **a, int length);
 int **createEmptyMatrix(int n);
 int **createMatrix(int n);
 
+// Matrix Use cases
+int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd);
+
 // Brute force matrix multiplication
 void matrixMultiply(int **a, int **b, int **product, int sizeN); 
 
 // Regular Divide and conquer algorithm
-int **matixMultiplyDivideAndConquer(int **a, int **b, int sizeN);
+int **matixMultiplyDC(int **a, int **b, int start, int end);
 
 // Straussen's Algorithm
 int **matrixMultiplyStraussen(int **a, int **b, int sizeN);
