@@ -33,10 +33,12 @@ int **createEmptyMatrix(int n) {
             newArray2D[i][j] = 0; 
         }
     }
+
+    return newArray2D;
 }
 
 int **createMatrix(int n) {
-    srand(time(NULL));
+    
     int **tempArray2D = new int*[n];
 
     for (int height = 0; height < n; height++) {
@@ -75,12 +77,12 @@ void matrixMultiply(int **a, int **b, int **product, int sizeN) {
 }
 
 // Regular Divide and conquer algorithm
-int **matixMultiplyDivideAndConquer(int **a, int **b, int sizeN) {
+// int **matixMultiplyDivideAndConquer(int **a, int **b, int sizeN) {
 
-}
+// }
 
 // Straussen's Algorithm
-int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
+// int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
 
-}
+// }
 
