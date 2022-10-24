@@ -64,10 +64,7 @@ void deleteMatrix(int **a, int length) {
 int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
     // cout << "Error 1" << endl;
     int newSize = (colEnd - colStart) + 1;
-    int **newMatrix = new int*[newSize];
-    for(int i = 0; i < newSize; i++){
-        newMatrix[i] = new int[newSize];
-    }
+    int **newMatrix = createEmptyMatrix(newSize);
     int i = 0;
     int j = 0;
     int rowTemp = rowStart;
@@ -89,6 +86,50 @@ int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int 
     return newMatrix; 
 }
 
+int** addMatrices(int **a, int **b, int sizeN) {
+    int **newArray = createEmptyMatrix(sizeN);
+
+    for(int row = 0; row < sizeN; row++) {
+        for(int col = 0; col < sizeN; col++) {
+            newArray[row][col] = a[row][col] + b[row][col];
+        }
+    }
+
+    return newArray;
+}
+
+int** combineMatrices(int **quad1, int **quad2, int **quad3, int **quad4, int sizeN) {
+    // cout << "Entered combining functions" << endl;
+    int newSize = sizeN * 2;
+    int **newArray = createEmptyMatrix(newSize);
+    // cout << "Started loop" << endl;
+    for (int row = 0; row < newSize; row++) {
+        // cout << "NEW ROW" << endl;
+        for(int col = 0; col < newSize; col++) {
+            // cout << "Adding element" << endl;
+            if(row < sizeN) {
+                if(col < sizeN) {
+                    newArray[row][col] = quad1[row][col];
+                }
+                else {
+                    newArray[row][col] = quad2[row][sizeN - (newSize - col)];
+                }
+            }
+            else {
+                if(col < sizeN) {
+                    newArray[row][col] = quad3[sizeN - (newSize - row)][col];
+                }
+                else {
+                    newArray[row][col] = quad4[sizeN - (newSize - row)][sizeN - (newSize - col)];
+                }
+            }
+
+        }
+    }
+
+    return newArray;
+}
+
 // Brute force matrix multiplication
 void matrixMultiply(int **a, int **b, int **product, int sizeN) {
     // For each row of matrix A, we must multiply with each column of matrix B
@@ -101,20 +142,60 @@ void matrixMultiply(int **a, int **b, int **product, int sizeN) {
             }
             product[rowA][colB] = total;
         }
-    }
- 
+    } 
 }
 
 // Regular Divide and conquer algorithm
-// int **matixMultiplyDC(int **a, int **b, int** product, int sizeN) {
-    
-//     if(sizeN == 0) {
-//         product[sizeN][sizeN] = a[sizeN][sizeN] * b[sizeN][sizeN]; 
-//     }
-//     else {
-        
-//     }
-// }
+int **matrixMultiplyDC(int **a, int **b, int sizeN) {
+    int midPoint = sizeN/2;
+    if(sizeN == 1) {
+        // cout << a[0][0] << " " << b[0][0] << endl;
+        int **returnArray = new int *[1];
+        returnArray[0] = new int[1];
+        returnArray[0][0] = a[0][0] * b[0][0]; 
+        return returnArray;
+    }
+    else {
+        // Partition matrix A
+        int **a11 = partitionMatrix(a, 0, midPoint - 1, 0, midPoint - 1);
+        int **a12 = partitionMatrix(a, 0, midPoint - 1, midPoint, sizeN - 1); 
+        int **a21 = partitionMatrix(a, midPoint, sizeN - 1, 0, midPoint - 1);
+        int **a22 = partitionMatrix(a, midPoint, sizeN - 1, midPoint, sizeN - 1);
+
+        // Partition matrix B
+        int **b11 = partitionMatrix(b, 0, midPoint - 1, 0, midPoint - 1);
+        int **b12 = partitionMatrix(b, 0, midPoint - 1, midPoint, sizeN - 1);
+        int **b21 = partitionMatrix(b, midPoint, sizeN - 1, 0, midPoint - 1);
+        int **b22 = partitionMatrix(b, midPoint, sizeN - 1, midPoint, sizeN - 1);
+
+        // Partition matrix C
+        int **c11 = addMatrices(matrixMultiplyDC(a11, b11, midPoint), matrixMultiplyDC(a12, b21, midPoint), midPoint);
+        int **c12 = addMatrices(matrixMultiplyDC(a11, b12, midPoint), matrixMultiplyDC(a12, b22, midPoint), midPoint);
+        int **c21 = addMatrices(matrixMultiplyDC(a21, b11, midPoint), matrixMultiplyDC(a22, b21, midPoint), midPoint);
+        int **c22 = addMatrices(matrixMultiplyDC(a21, b12, midPoint), matrixMultiplyDC(a22, b22, midPoint), midPoint);
+
+        //Combine the four quadrants
+        int **finalProduct = combineMatrices(c11, c12, c21, c22, midPoint);
+
+        // Delete Everything
+        deleteMatrix(a11, midPoint);
+        deleteMatrix(a12, midPoint);
+        deleteMatrix(a21, midPoint);
+        deleteMatrix(a22, midPoint);
+        deleteMatrix(b11, midPoint);
+        deleteMatrix(b12, midPoint);
+        deleteMatrix(b21, midPoint);
+        deleteMatrix(b22, midPoint);
+        deleteMatrix(c11, midPoint);
+        deleteMatrix(c12, midPoint);
+        deleteMatrix(c21, midPoint);
+        deleteMatrix(c22, midPoint);
+
+        //Return the final product
+        return finalProduct;
+
+    }
+}
 
 // Straussen's Algorithm
 // int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {

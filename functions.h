@@ -10,12 +10,14 @@ int **createMatrix(int n);
 
 // Matrix Use cases
 int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd);
+int** addMatrices(int **a, int **b, int sizeN);
+int** combineMatrices(int **quad1, int **quad2, int **quad3, int **quad4, int sizeN);
 
 // Brute force matrix multiplication
 void matrixMultiply(int **a, int **b, int **product, int sizeN); 
 
 // Regular Divide and conquer algorithm
-int **matixMultiplyDC(int **a, int **b, int start, int end);
+int **matrixMultiplyDC(int **a, int **b, int size);
 
 // Straussen's Algorithm
 int **matrixMultiplyStraussen(int **a, int **b, int sizeN);
