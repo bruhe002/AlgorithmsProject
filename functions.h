@@ -10,8 +10,10 @@ int **createMatrix(int n);
 
 // Matrix Use cases
 int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd);
-int** addMatrices(int **a, int **b, int sizeN);
+int **addMatrices(int **a, int **b, int sizeN);
+int **subMatrices(int **a, int **b, int sizeN);
 int** combineMatrices(int **quad1, int **quad2, int **quad3, int **quad4, int sizeN);
+
 
 // Brute force matrix multiplication
 void matrixMultiply(int **a, int **b, int **product, int sizeN); 
