@@ -44,9 +44,10 @@ int main() {
     cout << "Test Result 2:" << endl;
     printMatrix(testResult2, nLength);
 
-    // cout << endl;
-    // cout << "Matrix 5: " << endl;
-    // printMatrix(matrixE, nLength/2);
+    int **testResult3 = matrixMultiplyStraussen(matrixA, matrixB, nLength);
+    cout << endl;
+    cout << "Test Result 3: " << endl;
+    printMatrix(testResult3, nLength);
     
     // cout << endl;
     // cout << "Multiplying Matrices..." << endl;
@@ -60,6 +61,7 @@ int main() {
     deleteMatrix(matrixB, nLength);
     deleteMatrix(testResult1, nLength);
     deleteMatrix(testResult2, nLength);
+    deleteMatrix(testResult3, nLength);
 
     // deleteMatrix(productMatrix, nLength);
 

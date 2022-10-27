@@ -53,12 +53,16 @@ int **createMatrix(int n) {
     return tempArray2D;
 }
 
+
+// USE CASES involving Arrays
 void deleteMatrix(int **a, int length) {
     for(int i = 0; i < length; i++) {
         delete [] a[i];
+        a[i] = nullptr;
     }
 
     delete [] a;
+    a = nullptr;
 }
 
 int **partitionMatrix(int **matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
@@ -92,6 +96,18 @@ int** addMatrices(int **a, int **b, int sizeN) {
     for(int row = 0; row < sizeN; row++) {
         for(int col = 0; col < sizeN; col++) {
             newArray[row][col] = a[row][col] + b[row][col];
+        }
+    }
+
+    return newArray;
+}
+
+int** subMatrices(int **a, int **b, int sizeN) {
+    int **newArray = createEmptyMatrix(sizeN);
+
+    for(int row = 0; row < sizeN; row++) {
+        for(int col = 0; col < sizeN; col++) {
+            newArray[row][col] = a[row][col] - b[row][col];
         }
     }
 
@@ -198,7 +214,76 @@ int **matrixMultiplyDC(int **a, int **b, int sizeN) {
 }
 
 // Straussen's Algorithm
-// int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
+int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
+    // Base Case (divide and conquer)
+    if(sizeN = 1) {
+        if(sizeN == 1) {
+            // cout << a[0][0] << " " << b[0][0] << endl;
+            int **returnArray = new int *[1];
+            returnArray[0] = new int[1];
+            returnArray[0][0] = a[0][0] * b[0][0]; 
+            return returnArray;
+        }
+    }
+    else {
+        // Create Midpoint
+        int midPoint = sizeN / 2;
 
-// }
+        //Partition a & b matrices into their four quadrants
+        int **a11 = partitionMatrix(a, 0, midPoint - 1, 0, midPoint - 1);
+        int **a12 = partitionMatrix(a, 0, midPoint - 1, midPoint, sizeN - 1); 
+        int **a21 = partitionMatrix(a, midPoint, sizeN - 1, 0, midPoint - 1);
+        int **a22 = partitionMatrix(a, midPoint, sizeN - 1, midPoint, sizeN - 1);
+
+        int **b11 = partitionMatrix(b, 0, midPoint - 1, 0, midPoint - 1);
+        int **b12 = partitionMatrix(b, 0, midPoint - 1, midPoint, sizeN - 1);
+        int **b21 = partitionMatrix(b, midPoint, sizeN - 1, 0, midPoint - 1);
+        int **b22 = partitionMatrix(b, midPoint, sizeN - 1, midPoint, sizeN - 1);
+    
+        // Create Prodcut Matrices
+        int **productOne = matrixMultiplyStraussen(a11, subMatrices(b12, b22, midPoint), midPoint);
+        int **productTwo = matrixMultiplyStraussen(addMatrices(a11, a12, midPoint), b22, midPoint);
+        int **productThree = matrixMultiplyStraussen(addMatrices(a21, a22, midPoint), b11, midPoint);
+        int **productFour = matrixMultiplyStraussen(a22, subMatrices(b21, b11, midPoint), midPoint);
+        int **productFive = matrixMultiplyStraussen(addMatrices(a11, a22, midPoint), addMatrices(b11, b22, midPoint), midPoint);
+        int **productSix = matrixMultiplyStraussen(subMatrices(a12, a22, midPoint), addMatrices(b21, b22, midPoint), midPoint);
+        int **productSeven = matrixMultiplyStraussen(subMatrices(a11, a21, midPoint), subMatrices(b11, b12, midPoint), midPoint);
+
+        // Add the Products
+        int **c11 = addMatrices(subMatrices(addMatrices(productFive, productFour, midPoint), productTwo, midPoint), productSix, midPoint);
+        int **c12 = addMatrices(productOne, productTwo, midPoint);
+        int **c21 = addMatrices(productThree, productFour, midPoint);
+        int **c22 = addMatrices(productFive, subMatrices(productOne, subMatrices(productThree, productSeven, midPoint), midPoint), midPoint);
+
+        // Combine C products
+        int **finalProduct = combineMatrices(c11, c12, c21, c22, midPoint);
+
+        // Delete Pointers
+        deleteMatrix(a11, midPoint);
+        deleteMatrix(a12, midPoint);
+        deleteMatrix(a21, midPoint);
+        deleteMatrix(a22, midPoint);
+        deleteMatrix(b11, midPoint);
+        deleteMatrix(b12, midPoint);
+        deleteMatrix(b21, midPoint);
+        deleteMatrix(b22, midPoint);
+        deleteMatrix(productOne, midPoint);
+        deleteMatrix(productTwo, midPoint);
+        deleteMatrix(productThree, midPoint);
+        deleteMatrix(productFour, midPoint);
+        deleteMatrix(productFive, midPoint);
+        deleteMatrix(productSix, midPoint);
+        deleteMatrix(productSeven, midPoint);
+        deleteMatrix(c11, midPoint);
+        deleteMatrix(c12, midPoint);
+        deleteMatrix(c21, midPoint);
+        deleteMatrix(c22, midPoint);
+
+        // Return final Array
+        return finalProduct;
+
+    }
+    
+
+}
 
