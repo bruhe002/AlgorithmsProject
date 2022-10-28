@@ -215,20 +215,17 @@ int **matrixMultiplyDC(int **a, int **b, int sizeN) {
 
 // Straussen's Algorithm
 int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
+    // Create Midpoint
+    int midPoint = sizeN / 2;
     // Base Case (divide and conquer)
-    if(sizeN = 1) {
-        if(sizeN == 1) {
-            // cout << a[0][0] << " " << b[0][0] << endl;
-            int **returnArray = new int *[1];
-            returnArray[0] = new int[1];
-            returnArray[0][0] = a[0][0] * b[0][0]; 
-            return returnArray;
-        }
+    if(sizeN == 1) {
+        // cout << a[0][0] << " " << b[0][0] << endl;
+        int **returnArray = new int *[1];
+        returnArray[0] = new int[1];
+        returnArray[0][0] = a[0][0] * b[0][0]; 
+        return returnArray;
     }
     else {
-        // Create Midpoint
-        int midPoint = sizeN / 2;
-
         //Partition a & b matrices into their four quadrants
         int **a11 = partitionMatrix(a, 0, midPoint - 1, 0, midPoint - 1);
         int **a12 = partitionMatrix(a, 0, midPoint - 1, midPoint, sizeN - 1); 
@@ -247,13 +244,13 @@ int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
         int **productFour = matrixMultiplyStraussen(a22, subMatrices(b21, b11, midPoint), midPoint);
         int **productFive = matrixMultiplyStraussen(addMatrices(a11, a22, midPoint), addMatrices(b11, b22, midPoint), midPoint);
         int **productSix = matrixMultiplyStraussen(subMatrices(a12, a22, midPoint), addMatrices(b21, b22, midPoint), midPoint);
-        int **productSeven = matrixMultiplyStraussen(subMatrices(a11, a21, midPoint), subMatrices(b11, b12, midPoint), midPoint);
+        int **productSeven = matrixMultiplyStraussen(subMatrices(a11, a21, midPoint), addMatrices(b11, b12, midPoint), midPoint);
 
         // Add the Products
         int **c11 = addMatrices(subMatrices(addMatrices(productFive, productFour, midPoint), productTwo, midPoint), productSix, midPoint);
         int **c12 = addMatrices(productOne, productTwo, midPoint);
         int **c21 = addMatrices(productThree, productFour, midPoint);
-        int **c22 = addMatrices(productFive, subMatrices(productOne, subMatrices(productThree, productSeven, midPoint), midPoint), midPoint);
+        int **c22 = subMatrices(subMatrices(addMatrices(productFive, productOne, midPoint), productThree, midPoint), productSeven, midPoint);
 
         // Combine C products
         int **finalProduct = combineMatrices(c11, c12, c21, c22, midPoint);
