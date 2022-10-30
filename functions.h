@@ -16,10 +16,10 @@ int** combineMatrices(int **quad1, int **quad2, int **quad3, int **quad4, int si
 
 
 // Brute force matrix multiplication
-void matrixMultiply(int **a, int **b, int **product, int sizeN); 
+int **matrixMultiply(int **a, int **b, int sizeN); 
 
 // Regular Divide and conquer algorithm
-int **matrixMultiplyDC(int **a, int **b, int size);
+int **matrixMultiplyDC(int **a, int **b, int sizeN);
 
 // Straussen's Algorithm
 int **matrixMultiplyStraussen(int **a, int **b, int sizeN);
