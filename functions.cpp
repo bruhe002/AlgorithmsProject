@@ -83,14 +83,25 @@ vector<vector<int>> partitionMatrix(const vector<vector<int>>& matrix, int rowSt
     return newMatrix; 
 }
 
-vector<vector<int>> addMatrixStrauss(vector<vector<int>> a, vector<vector<int>> b, int size) {
+vector<vector<int>> addMatrixStrauss(vector<vector<int>> a, int aRowStart, int aRowEnd, int aColStart, int aColEnd, 
+                                     vector<vector<int>> b, int bRowStart, int bRowEnd, int bColStart, int bColEnd, int size) {
+    int aRowTemp = aRowStart;
+    int bRowTemp = bRowStart;
+    vector<vector<int>> tempMatrix(size, vector<int>(size, 0));                                    
     for(int row = 0; row < size; row++) {
+        int aColTemp = aColStart;
+        int bColTemp = bColStart;
         for(int col = 0; col < size; col++) {
-            a[row][col] = a[row][col] + b[row][col];
+            tempMatrix[row][col] = a[aRowTemp][aColTemp] + b[bRowTemp][bColTemp];
+            aColTemp++;
+            bColTemp++;
         }
+
+        aRowTemp++;
+        bRowTemp++;
     }
 
-    return a;
+    return tempMatrix;
 }
 
 void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
@@ -101,14 +112,26 @@ void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vecto
     }
 }
 
-vector<vector<int>> subMatrixStrauss(vector<vector<int>> a, vector<vector<int>>b, int sizeN) {
+vector<vector<int>> subMatrixStrauss(vector<vector<int>> a, int aRowStart, int aRowEnd, int aColStart, int aColEnd, 
+                                     vector<vector<int>> b, int bRowStart, int bRowEnd, int bColStart, int bColEnd, int size) {
     
-    for(int row = 0; row < sizeN; row++) {
-        for(int col = 0; col < sizeN; col++) {
-            a[row][col] = a[row][col] - b[row][col];
+    int aRowTemp = aRowStart;
+    int bRowTemp = bRowStart;
+    vector<vector<int>> tempMatrix(size, vector<int>(size, 0));                                    
+    for(int row = 0; row < size; row++) {
+        int aColTemp = aColStart;
+        int bColTemp = bColStart;
+        for(int col = 0; col < size; col++) {
+            tempMatrix[row][col] = a[aRowTemp][aColTemp] - b[bRowTemp][bColTemp];
+            aColTemp++;
+            bColTemp++;
         }
+
+        aRowTemp++;
+        bRowTemp++;
     }
-    return a;
+
+    return tempMatrix;
 }
 
 vector<vector<int>> combineMatrices(const vector<vector<int>>& quad1, const vector<vector<int>>& quad2, const vector<vector<int>>&quad3, const vector<vector<int>>&quad4, int sizeN) {
@@ -257,7 +280,9 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
 }
 
 // Straussen's Algorithm
-vector<vector<int>> matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b) {
+vector<vector<int>> matrixMultiplyStraussen(vector<vector<int>>& a, int aRowStart, int aRowEnd, int aColStart, int aColEnd,
+                                            vector<vector<int>>& b, int bRowStart, int bRowEnd, int bColStart, int bColEnd,
+                                            vector<vector<int>>& c, int cRowStart, int cRowEnd, int cColStart, int cColEnd) {
     int aCols = a[0].size();
     int aRows = a.size();
     int bCols = b[0].size();
@@ -275,44 +300,56 @@ vector<vector<int>> matrixMultiplyStraussen(vector<vector<int>>& a, vector<vecto
         // vector<int>::iterator iter_b;
 
         // Set up partitions
-        vector<vector<int>> a11 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> a12 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> a21 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> a22 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> a11 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> a12 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> a21 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> a22 (midPoint, vector<int> (midPoint, 0));
 
-        vector<vector<int>> b11 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> b12 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> b21 (midPoint, vector<int> (midPoint, 0));
-        vector<vector<int>> b22 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> b11 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> b12 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> b21 (midPoint, vector<int> (midPoint, 0));
+        // vector<vector<int>> b22 (midPoint, vector<int> (midPoint, 0));
 
-        for(int row = 0; row < midPoint; row++) {
-            for(int col = 0; col < midPoint; col++) {
-                a11[row][col] = a[row][col];
-                a12[row][col] = a[row][col + midPoint];
-                a21[row][col] = a[row + midPoint][col];
-                a22[row][col] = a[row + midPoint][col + midPoint];
+        // for(int row = 0; row < midPoint; row++) {
+        //     for(int col = 0; col < midPoint; col++) {
+        //         a11[row][col] = a[row][col];
+        //         a12[row][col] = a[row][col + midPoint];
+        //         a21[row][col] = a[row + midPoint][col];
+        //         a22[row][col] = a[row + midPoint][col + midPoint];
 
-                b11[row][col] = b[row][col];
-                b12[row][col] = b[row][col + midPoint];
-                b21[row][col] = b[row + midPoint][col];
-                b22[row][col] = b[row + midPoint][col + midPoint];
-            }
-        }
+        //         b11[row][col] = b[row][col];
+        //         b12[row][col] = b[row][col + midPoint];
+        //         b21[row][col] = b[row + midPoint][col];
+        //         b22[row][col] = b[row + midPoint][col + midPoint];
+        //     }
+        // }
+
+        vector<vector<int>> sumOne = subMatrixStrauss(b, bRowStart, midPoint - 1, midPoint, bColEnd, b, midPoint, bRowEnd, midPoint, bColEnd, midPoint);
+        vector<vector<int>> sumTwo = addMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, aRowStart, midPoint - 1, midPoint, aColEnd, midPoint);
+        vector<vector<int>> sumThree = addMatrixStrauss(a, midPoint, aRowEnd, aColStart, midPoint - 1, a, midPoint, aColEnd, midPoint, aColEnd, midPoint);
+        vector<vector<int>> sumFour = subMatrixStrauss(b, midPoint, bRowEnd, bColStart, midPoint - 1, b, bRowStart, midPoint - 1, bColStart, midPoint - 1, midPoint);
+        vector<vector<int>> sumFive = addMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, midPoint, aRowEnd, midPoint, aColEnd, midPoint);
+        vector<vector<int>> sumSix = subMatrixStrauss(b, bRowStart, midPoint - 1, bColStart, midPoint - 1, b, midPoint, bRowEnd, midPoint, bColEnd, midPoint);
+        vector<vector<int>> sumSeven = subMatrixStrauss(a, aRowStart, midPoint - 1, midPoint, aColEnd, a, midPoint, aRowEnd, midPoint, aColEnd, midPoint);
+        vector<vector<int>> sumEight = addMatrixStrauss(b, midPoint, bRowEnd, bColStart, midPoint - 1, b, midPoint, bRowEnd, midPoint, bColEnd, midPoint);
+        vector<vector<int>> sumNine = subMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, midPoint, aRowEnd, aColStart, midPoint - 1, midPoint);
+        vector<vector<int>> sumTen = addMatrixStrauss(b, bRowStart, midPoint - 1, bColStart, midPoint - 1, b, bColStart, midPoint - 1, midPoint, bColEnd, midPoint);
 
         
 
-        vector<vector<int>> productOne(matrixMultiplyStraussen(a11, subMatrixStrauss(b12, b22, midPoint)));
-        vector<vector<int>> productTwo(matrixMultiplyStraussen(addMatrixStrauss(a11, a12, midPoint), b22));
-        vector<vector<int>> productThree(matrixMultiplyStraussen(addMatrixStrauss(a21, a22, midPoint), b11));
-        vector<vector<int>> productFour(matrixMultiplyStraussen(a22, subMatrixStrauss(b21, b11, midPoint)));
-        vector<vector<int>> productFive(matrixMultiplyStraussen(addMatrixStrauss(a11, a22, midPoint), addMatrixStrauss(b11, b22, midPoint)));
-        vector<vector<int>> productSix(matrixMultiplyStraussen(subMatrixStrauss(a12, a22, midPoint), addMatrixStrauss(b21, b22, midPoint)));
-        vector<vector<int>> productSeven(matrixMultiplyStraussen(subMatrixStrauss(a11, a21, midPoint), addMatrixStrauss(b11, b12, midPoint)));
+        // vector<vector<int>> productOne(matrixMultiplyStraussen(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, subMatrixStrauss(b12, b22, midPoint)));
+        // vector<vector<int>> productTwo(matrixMultiplyStraussen(addMatrixStrauss(a11, a12, midPoint), b22));
+        // vector<vector<int>> productThree(matrixMultiplyStraussen(addMatrixStrauss(a21, a22, midPoint), b11));
+        // vector<vector<int>> productFour(matrixMultiplyStraussen(a22, subMatrixStrauss(b21, b11, midPoint)));
+        // vector<vector<int>> productFive(matrixMultiplyStraussen(addMatrixStrauss(a11, a22, midPoint), addMatrixStrauss(b11, b22, midPoint)));
+        // vector<vector<int>> productSix(matrixMultiplyStraussen(subMatrixStrauss(a12, a22, midPoint), addMatrixStrauss(b21, b22, midPoint)));
+        // vector<vector<int>> productSeven(matrixMultiplyStraussen(subMatrixStrauss(a11, a21, midPoint), addMatrixStrauss(b11, b12, midPoint)));
 
-        vector<vector<int>> c11 (addMatrixStrauss(productSix, addMatrixStrauss(productFive, subMatrixStrauss(productFour, productTwo, midPoint), midPoint), midPoint));
-        vector<vector<int>> c12 (addMatrixStrauss(productOne, productTwo, midPoint));
-        vector<vector<int>> c21 (addMatrixStrauss(productThree, productFour, midPoint));
-        vector<vector<int>> c22 (addMatrixStrauss(productOne, subMatrixStrauss(productFive, subMatrixStrauss(productThree, productSeven, midPoint), midPoint), midPoint));
+        // vector<vector<int>> c11 (addMatrixStrauss(productSix, addMatrixStrauss(productFive, subMatrixStrauss(productFour, productTwo, midPoint), midPoint), midPoint));
+        // matrixMultiplyStraussen()
+        // vector<vector<int>> c12 (addMatrixStrauss(productOne, productTwo, midPoint));
+        // vector<vector<int>> c21 (addMatrixStrauss(productThree, productFour, midPoint));
+        // vector<vector<int>> c22 (addMatrixStrauss(productOne, subMatrixStrauss(productFive, subMatrixStrauss(productThree, productSeven, midPoint), midPoint), midPoint));
 
         for(int row = 0; row < midPoint; row++) {
             for(int col = 0; col < midPoint; col++) {

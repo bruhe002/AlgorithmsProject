@@ -23,7 +23,7 @@ std::vector<std::vector<int>> matrixMultiply(const std::vector<std::vector<int>>
 std::vector<std::vector<int>> matrixMultiplyDC(const std::vector<std::vector<int>>& a, const std::vector<std::vector<int>>& b);
 
 // Straussen's Algorithm
-int **matrixMultiplyStraussen(int **a, int **b, int sizeN);
+std::vector<std::vector<int>> matrixMultiplyStraussen(std::vector<std::vector<int>>& a, std::vector<std::vector<int>>& b);
 
 
 #endif

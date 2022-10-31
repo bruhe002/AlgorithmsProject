@@ -32,24 +32,32 @@ int main() {
     // cout << endl;
     // printMatrix(vect2, nLength);
     // cout << endl;
+
     clock_t testOneStart = clock();
-    
     vector<vector<int>> product1 = matrixMultiply(vect1, vect2, nLength);
     clock_t testOneEnd = clock();
     double testOneDuration = double(testOneEnd - testOneStart) / double(CLOCKS_PER_SEC);
-    // printMatrix(product1, nLength);
+    printMatrix(product1, nLength);
     cout << endl;
-    cout << testOneDuration << " mms" << endl << endl;
+    // cout << testOneDuration << " mms" << endl << endl;
 
     time_t testTwoStart, testTwoEnd;
     time(&testTwoStart);
     vector<vector<int>> product2 = matrixMultiplyDC(vect1, vect2);
     time(&testTwoEnd);
     double testTwoDuration = double(testTwoEnd - testTwoStart);
-    // printMatrix(product2, nLength);
+    printMatrix(product2, nLength);
     cout << endl;
-    cout << testTwoDuration << " mms" << endl << endl;
+    // cout << testTwoDuration << " mms" << endl << endl;
     
+    time_t testThreeStart, testThreeEnd;
+    time(&testThreeStart);
+    vector<vector<int>> product3 = matrixMultiplyStraussen(vect1, vect2);
+    time(&testTwoEnd);
+    double testThreeDuration = double(testThreeEnd - testThreeStart);
+    printMatrix(product2, nLength);
+    cout << endl;
+    // cout << testTwoDuration << " mms" << endl << endl;
     
     
     // int **matrixB = partitionMatrix(matrixA, 0, nLength/2 - 1, 0, nLength/2 - 1);
