@@ -83,8 +83,14 @@ vector<vector<int>> partitionMatrix(const vector<vector<int>>& matrix, int rowSt
     return newMatrix; 
 }
 
-void addMatrixStrauss(int**a, int**b, int aRow, int aCol, int bRow, int bCol, int size) {
+vector<vector<int>> addMatrixStrauss(vector<vector<int>> a, vector<vector<int>> b, int size) {
+    for(int row = 0; row < size; row++) {
+        for(int col = 0; col < size; col++) {
+            a[row][col] = a[row][col] + b[row][col];
+        }
+    }
 
+    return a;
 }
 
 void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
@@ -95,14 +101,14 @@ void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vecto
     }
 }
 
-int** subMatrices(int **a, int **b, int sizeN) {
-    int **newArray = createEmptyMatrix(sizeN);
+vector<vector<int>> subMatrixStrauss(vector<vector<int>> a, vector<vector<int>>b, int sizeN) {
+    
     for(int row = 0; row < sizeN; row++) {
         for(int col = 0; col < sizeN; col++) {
-            newArray[row][col] = a[row][col] - b[row][col];
+            a[row][col] = a[row][col] - b[row][col];
         }
     }
-    return newArray;
+    return a;
 }
 
 vector<vector<int>> combineMatrices(const vector<vector<int>>& quad1, const vector<vector<int>>& quad2, const vector<vector<int>>&quad3, const vector<vector<int>>&quad4, int sizeN) {
@@ -251,130 +257,79 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
 }
 
 // Straussen's Algorithm
-// int **matrixMultiplyStraussen(int **a, int **b, int sizeN) {
-//     // Create Midpoint
-//     int midPoint = sizeN / 2;
-//     // Base Case (divide and conquer)
-//     if(sizeN == 1) {
-//         // cout << a[0][0] << " " << b[0][0] << endl;
-//         int **returnArray = new int *[1];
-//         returnArray[0] = new int[1];
-//         returnArray[0][0] = a[0][0] * b[0][0]; 
-//         return returnArray;
-//     }
-//     else {
-//         //Partition a & b matrices into their four quadrants
-//         int **a11 = partitionMatrix(a, 0, midPoint - 1, 0, midPoint - 1);
-//         int **a12 = partitionMatrix(a, 0, midPoint - 1, midPoint, sizeN - 1); 
-//         int **a21 = partitionMatrix(a, midPoint, sizeN - 1, 0, midPoint - 1);
-//         int **a22 = partitionMatrix(a, midPoint, sizeN - 1, midPoint, sizeN - 1);
+vector<vector<int>> matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b) {
+    int aCols = a[0].size();
+    int aRows = a.size();
+    int bCols = b[0].size();
+    int bRows = b.size();
+    vector<vector<int>> returnMatrix(aRows, vector<int> (bCols, 0));
 
-//         int **b11 = partitionMatrix(b, 0, midPoint - 1, 0, midPoint - 1);
-//         int **b12 = partitionMatrix(b, 0, midPoint - 1, midPoint, sizeN - 1);
-//         int **b21 = partitionMatrix(b, midPoint, sizeN - 1, 0, midPoint - 1);
-//         int **b22 = partitionMatrix(b, midPoint, sizeN - 1, midPoint, sizeN - 1);
+    if(aCols == 1) {
+        returnMatrix[0][0] = a[0][0] * b[0][0];
+    }
+    else {
+        int midPoint = bCols / 2;
+        // vector<vector<int>>::iterator iter_row_a = a.begin();
+        // vector<int>::iterator iter_a;
+        // vector<vector<int>>::iterator iter_row_b;
+        // vector<int>::iterator iter_b;
 
-//         // B12 - b22
-//         int **sumOfProductOne = subMatrices(b12, b22, midPoint);
-//         // B11 + B12
-//         int **sumOfProductSeven2 = addMatrices(b11, b12, midPoint);
-//         deleteMatrix(b12, midPoint);
+        // Set up partitions
+        vector<vector<int>> a11 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> a12 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> a21 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> a22 (midPoint, vector<int> (midPoint, 0));
 
-//         // A11 + A12
-//         int **sumOfProductTwo = addMatrices(a11, a12, midPoint);
-//         // A12 - A22
-//         int **sumOfProductSix1 = subMatrices(a12, a22, midPoint);
-//         deleteMatrix(a12, midPoint);
+        vector<vector<int>> b11 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> b12 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> b21 (midPoint, vector<int> (midPoint, 0));
+        vector<vector<int>> b22 (midPoint, vector<int> (midPoint, 0));
 
-//         // A21 + A22
-//         int **sumOfProductThree = addMatrices(a21, a22, midPoint);
-//         // A11 - A21
-//         int **sumOfProductSeven1 = subMatrices(a11, a21, midPoint);
-//         deleteMatrix(a21, midPoint);
+        for(int row = 0; row < midPoint; row++) {
+            for(int col = 0; col < midPoint; col++) {
+                a11[row][col] = a[row][col];
+                a12[row][col] = a[row][col + midPoint];
+                a21[row][col] = a[row + midPoint][col];
+                a22[row][col] = a[row + midPoint][col + midPoint];
 
-//         // B21 - b11
-//         int **sumOfProductFour = subMatrices(b21, b11, midPoint);
-//         // B21 + B22
-//         int **sumOfProductSix2 = addMatrices(b21, b22, midPoint);
-//         deleteMatrix(b21, midPoint);
+                b11[row][col] = b[row][col];
+                b12[row][col] = b[row][col + midPoint];
+                b21[row][col] = b[row + midPoint][col];
+                b22[row][col] = b[row + midPoint][col + midPoint];
+            }
+        }
 
-//         // A11 + A22
-//         int **sumOfProductFive1 = addMatrices(a11, a22, midPoint);
-//         int **productOne = matrixMultiplyStraussen(a11, sumOfProductOne, midPoint);
-//         deleteMatrix(a11, midPoint);
-//         deleteMatrix(sumOfProductOne, midPoint);
-//         int **productFour = matrixMultiplyStraussen(a22, sumOfProductFour, midPoint);
-//         deleteMatrix(a22, midPoint);
-//         deleteMatrix(sumOfProductFour, midPoint);
-
-//         // B11 + B22
-//         int **sumOfProductFive2 = addMatrices(b11, b22, midPoint);
-//         int **productThree = matrixMultiplyStraussen(sumOfProductThree, b11, midPoint);
-//         deleteMatrix(b11, midPoint);
-//         deleteMatrix(sumOfProductThree, midPoint);
-//         int **productTwo = matrixMultiplyStraussen(sumOfProductTwo, b22, midPoint);
-//         deleteMatrix(b22, midPoint);
-//         deleteMatrix(sumOfProductTwo, midPoint);
         
-//         int **productFive = matrixMultiplyStraussen(sumOfProductFive1, sumOfProductFive2, midPoint);
-//         deleteMatrix(sumOfProductFive1, midPoint);
-//         deleteMatrix(sumOfProductFive2, midPoint);
 
-//         int **productSix = matrixMultiplyStraussen(sumOfProductSix1, sumOfProductSix2, midPoint);
-//         deleteMatrix(sumOfProductSix1, midPoint);
-//         deleteMatrix(sumOfProductSix2, midPoint);
+        vector<vector<int>> productOne(matrixMultiplyStraussen(a11, subMatrixStrauss(b12, b22, midPoint)));
+        vector<vector<int>> productTwo(matrixMultiplyStraussen(addMatrixStrauss(a11, a12, midPoint), b22));
+        vector<vector<int>> productThree(matrixMultiplyStraussen(addMatrixStrauss(a21, a22, midPoint), b11));
+        vector<vector<int>> productFour(matrixMultiplyStraussen(a22, subMatrixStrauss(b21, b11, midPoint)));
+        vector<vector<int>> productFive(matrixMultiplyStraussen(addMatrixStrauss(a11, a22, midPoint), addMatrixStrauss(b11, b22, midPoint)));
+        vector<vector<int>> productSix(matrixMultiplyStraussen(subMatrixStrauss(a12, a22, midPoint), addMatrixStrauss(b21, b22, midPoint)));
+        vector<vector<int>> productSeven(matrixMultiplyStraussen(subMatrixStrauss(a11, a21, midPoint), addMatrixStrauss(b11, b12, midPoint)));
 
-//         int **productSeven = matrixMultiplyStraussen(sumOfProductSeven1, sumOfProductSeven2, midPoint);
-//         deleteMatrix(sumOfProductSeven1, midPoint);
-//         deleteMatrix(sumOfProductSeven2, midPoint);
-        
-//         // Add the Products
-//         // P4 + P5
-//         int **sumForFinalProduct45 = addMatrices(productFour, productFive, midPoint);
+        vector<vector<int>> c11 (addMatrixStrauss(productSix, addMatrixStrauss(productFive, subMatrixStrauss(productFour, productTwo, midPoint), midPoint), midPoint));
+        vector<vector<int>> c12 (addMatrixStrauss(productOne, productTwo, midPoint));
+        vector<vector<int>> c21 (addMatrixStrauss(productThree, productFour, midPoint));
+        vector<vector<int>> c22 (addMatrixStrauss(productOne, subMatrixStrauss(productFive, subMatrixStrauss(productThree, productSeven, midPoint), midPoint), midPoint));
 
-//         // P4 + P5 + P6
-//         int **sumForFinalProduct456 = addMatrices(sumForFinalProduct45, productSix, midPoint);
-//         deleteMatrix(sumForFinalProduct45, midPoint);
+        for(int row = 0; row < midPoint; row++) {
+            for(int col = 0; col < midPoint; col++) {
+                //The combining is the reverse of the partition indexing 
 
-//         // P4 + P5 + P6 - P2
-//         int **c11 = subMatrices(sumForFinalProduct456, productTwo, midPoint);
+                //First quadrant
+                returnMatrix[row][col] = c11[row][col];
+                //Second Quadrant
+                returnMatrix[row][col + midPoint] = c12[row][col];
+                //Third Quadrant
+                returnMatrix[row + midPoint][col] = c21[row][col];
+                //Fourth Quadrant
+                returnMatrix[row + midPoint][col + midPoint] = c22[row][col];
+            }
+        }
+    }
 
-//         // int **c11 = addMatrices(subMatrices(addMatrices(productFive, productFour, midPoint), productTwo, midPoint), productSix, midPoint);
-//         int **c12 = addMatrices(productOne, productTwo, midPoint);
-//         deleteMatrix(productTwo, midPoint);
-
-//         int **c21 = addMatrices(productThree, productFour, midPoint);
-//         deleteMatrix(productFour, midPoint);
-
-//         // P1 + P5
-//         int **sumForFinalProduct15 = addMatrices(productOne, productFive, midPoint);
-//         deleteMatrix(productOne, midPoint);
-//         deleteMatrix(productFive, midPoint);
-
-//         // P1 + P5 - P3
-//         int **sumForFinalProduct153 = subMatrices(sumForFinalProduct15, productThree, midPoint);
-//         deleteMatrix(sumForFinalProduct15, midPoint);
-//         deleteMatrix(productThree, midPoint);
-
-//         // P1 + P5 - P3 - P7
-//         int **c22 = subMatrices(sumForFinalProduct153, productSeven, midPoint);
-//         deleteMatrix(sumForFinalProduct153, midPoint);
-//         deleteMatrix(productSeven, midPoint);
-
-//         // Combine C products
-//         int **finalProduct = combineMatrices(c11, c12, c21, c22, midPoint);
-
-//         // Delete Pointers
-//         deleteMatrix(c11, midPoint);
-//         deleteMatrix(c12, midPoint);
-//         deleteMatrix(c21, midPoint);
-//         deleteMatrix(c22, midPoint);
-
-//         // Return final Array
-//         return finalProduct;
-
-    // }
-    
-
-// }
+    return returnMatrix;
+}
 
