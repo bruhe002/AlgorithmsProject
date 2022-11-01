@@ -51,11 +51,18 @@ int main() {
     // cout << testTwoDuration << " mms" << endl << endl;
     
     time_t testThreeStart, testThreeEnd;
+    vector<vector<int>> product3(nLength, vector<int>(nLength, 0));
     time(&testThreeStart);
-    vector<vector<int>> product3 = matrixMultiplyStraussen(vect1, vect2);
-    time(&testTwoEnd);
+    try {
+        cout << "In try block" << endl;
+        matrixMultiplyStraussen(vect1, 0, nLength - 1, 0, nLength - 1, vect2, 0, nLength - 1, 0, nLength - 1, product3, 0, nLength - 1, 0, nLength - 1, nLength);
+    } catch(const exception& e) {
+        cerr << e.what() << endl;
+    }
+    
+    time(&testThreeEnd);
     double testThreeDuration = double(testThreeEnd - testThreeStart);
-    printMatrix(product2, nLength);
+    printMatrix(product3, nLength);
     cout << endl;
     // cout << testTwoDuration << " mms" << endl << endl;
     
