@@ -15,7 +15,7 @@ int main() {
     // Needed for random number generator
     
     srand(time(NULL));
-    cout << fixed << setprecision(20) << endl;
+    cout << fixed << setprecision(5) << endl;
     // Matrix creation tests
     int nLength = 0;
     cout << "Please enter a positive number: ";
@@ -37,34 +37,33 @@ int main() {
     vector<vector<int>> product1 = matrixMultiply(vect1, vect2, nLength);
     clock_t testOneEnd = clock();
     double testOneDuration = double(testOneEnd - testOneStart) / double(CLOCKS_PER_SEC);
-    printMatrix(product1, nLength);
+    // printMatrix(product1, nLength);
     cout << endl;
-    // cout << testOneDuration << " mms" << endl << endl;
+    cout << testOneDuration << " s" << endl << endl;
 
-    time_t testTwoStart, testTwoEnd;
-    time(&testTwoStart);
+    // time_t testTwoStart, testTwoEnd;
+    clock_t testTwoStart = clock();
     vector<vector<int>> product2 = matrixMultiplyDC(vect1, vect2);
-    time(&testTwoEnd);
-    double testTwoDuration = double(testTwoEnd - testTwoStart);
-    printMatrix(product2, nLength);
+    clock_t testTwoEnd = clock();
+    double testTwoDuration = double(testTwoEnd - testTwoStart) / double(CLOCKS_PER_SEC);
+    // printMatrix(product2, nLength);
     cout << endl;
-    // cout << testTwoDuration << " mms" << endl << endl;
+    cout << testTwoDuration << " sec" << endl << endl;
     
-    time_t testThreeStart, testThreeEnd;
+    // time_t testThreeStart, testThreeEnd;
     vector<vector<int>> product3(nLength, vector<int>(nLength, 0));
-    time(&testThreeStart);
+    clock_t testThreeStart = clock();
+    cout << "In try block" << endl;
     try {
-        cout << "In try block" << endl;
-        matrixMultiplyStraussen(vect1, 0, nLength - 1, 0, nLength - 1, vect2, 0, nLength - 1, 0, nLength - 1, product3, 0, nLength - 1, 0, nLength - 1, nLength);
+        matrixMultiplyStraussen(vect1, vect2, product3, nLength);
     } catch(const exception& e) {
         cerr << e.what() << endl;
     }
-    
-    time(&testThreeEnd);
-    double testThreeDuration = double(testThreeEnd - testThreeStart);
-    printMatrix(product3, nLength);
+    clock_t testThreeEnd = clock();
+    double testThreeDuration = double(testThreeEnd - testThreeStart) / double(CLOCKS_PER_SEC);
+    // printMatrix(product3, nLength);
     cout << endl;
-    // cout << testTwoDuration << " mms" << endl << endl;
+    cout << testThreeDuration << " sec" << endl << endl;
     
     
     // int **matrixB = partitionMatrix(matrixA, 0, nLength/2 - 1, 0, nLength/2 - 1);
