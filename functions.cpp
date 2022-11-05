@@ -28,15 +28,6 @@ void printMatrix(const vector<vector<int>>& vect, int length) {
 
 }
 
-int **createEmptyMatrix(int n) {
-    int **newArray2D = new int *[n];
-    for(int i = 0; i < n; i++) {
-        newArray2D[i] = new int[n];
-    }
-
-    return newArray2D;
-}
-
 void createMatrix(vector<vector<int>>& vect, int n) {
     
     for (int height = 0; height < n; height++) {
@@ -49,52 +40,6 @@ void createMatrix(vector<vector<int>>& vect, int n) {
 
 
 // USE CASES involving Arrays
-void deleteMatrix(int **a, int length) {
-    for(int i = 0; i < length; i++) {
-        delete [] a[i];
-        a[i] = nullptr;
-    }
-
-    delete [] a;
-    a = nullptr;
-}
-
-vector<vector<int>> partitionMatrix(const vector<vector<int>>& matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
-    // cout << "Error 1" << endl;
-    int newSize = (colEnd - colStart) + 1;
-    vector<vector<int>> newMatrix (newSize, vector<int> (newSize, 0));
-    int i = 0;
-    int j = 0;
-    int rowTemp = rowStart;
-    int colTemp = 0;
-    while(rowTemp <= rowEnd) {
-        // cout << "MAKING MATRIX" << endl;
-        j = 0;
-        colTemp = colStart;
-        while(colTemp <= colEnd) {
-            // cout << "Filling matrix" << endl;
-            newMatrix[i][j] = matrix[rowTemp][colTemp];
-            colTemp++;
-            j++;
-        }
-        rowTemp++;
-        i++;
-    }
-    // cout << "Bout to return" << endl;
-    return newMatrix; 
-}
-
-void addMatrixStrauss(vector<vector<int>>& a, int aRowStart, int aRowEnd, int aColStart, int aColEnd, 
-                                     vector<vector<int>>& b, int bRowStart, int bRowEnd, int bColStart, int bColEnd, 
-                                     vector<vector<int>>& c, int cRowStart, int cRowEnd, int cColStart, int cColEnd, int size) {
-    // vector<vector<int>> tempMatrix(size, vector<int>(size, 0));                                    
-    for(int row = 0; row < size; row++) {
-        for(int col = 0; col < size; col++) {
-            c[cRowStart + row][cColStart + col] = a[aRowStart + row][aColStart + col] + b[bRowStart + row][bColStart + col];
-        }
-
-    }
-}
 
 void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
     for(int row = 0; row < sizeN; row++) {
@@ -110,52 +55,6 @@ void subMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vecto
             c[row][col] = a[row][col] - b[row][col];
         }
     }
-}
-
-void subMatrixStrauss(vector<vector<int>>& a, int aRowStart, int aRowEnd, int aColStart, int aColEnd, 
-                                     vector<vector<int>>& b, int bRowStart, int bRowEnd, int bColStart, int bColEnd, 
-                                     vector<vector<int>>& c, int cRowStart, int cRowEnd, int cColStart, int cColEnd, int size) {
-    
-    // vector<vector<int>> tempMatrix(size, vector<int>(size, 0));                                    
-    for(int row = 0; row < size; row++) {
-        for(int col = 0; col < size; col++) {
-            c[cRowStart + row][cColStart + col] = a[aRowStart + row][aColStart + col] - b[bRowStart + row][bColStart + col];
-        }
-
-    }
-
-}
-
-vector<vector<int>> combineMatrices(const vector<vector<int>>& quad1, const vector<vector<int>>& quad2, const vector<vector<int>>&quad3, const vector<vector<int>>&quad4, int sizeN) {
-    // cout << "Entered combining functions" << endl;
-    int newSize = sizeN * 2;
-    vector<vector<int>> newMatrix(newSize, vector<int>(newSize, 0));
-    // cout << "Started loop" << endl;
-    for (int row = 0; row < newSize; row++) {
-        // cout << "NEW ROW" << endl;
-        for(int col = 0; col < newSize; col++) {
-            // cout << "Adding element" << endl;
-            if(row < sizeN) {
-                if(col < sizeN) {
-                    newMatrix[row][col] = quad1[row][col];
-                }
-                else {
-                    newMatrix[row][col] = quad2[row][sizeN - (newSize - col)];
-                }
-            }
-            else {
-                if(col < sizeN) {
-                    newMatrix[row][col] = quad3[sizeN - (newSize - row)][col];
-                }
-                else {
-                    newMatrix[row][col] = quad4[sizeN - (newSize - row)][sizeN - (newSize - col)];
-                }
-            }
-
-        }
-    }
-
-    return newMatrix;
 }
 
 // Brute force matrix multiplication
@@ -225,8 +124,6 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
         } 
 
         // a11 * b11 + a12 * b21
-        // vector<vector<int>> productOne = matrixMultiplyDC(a, b, aRow, midPoint - 1, bRow, midPoint - 1, midPoint);
-        // vector<vector<int>> productTwo = matrixMultiplyDC(a, b, aRow, midPoint, midPoint, bCol, midPoint);
         addMatrix(matrixMultiplyDC(a11, b11), matrixMultiplyDC(a12, b21), c11, midPoint);
 
         // a11 * b12 + a12 * b22
@@ -274,28 +171,11 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
 
 // Straussen's Algorithm
 void matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b, vector<vector<int>>& c, int size) {
-    // int aCols = a[0].size();
-    // int aRows = a.size();
-    // int bCols = b[0].size();
-    // int bRows = b.size();
-    vector<vector<int>> returnMatrix(size, vector<int> (size, 0));
-
     if(size == 1) {
         c[0][0] = a[0][0] * b[0][0];
     }
     else {
         int midPoint = size / 2;
-
-        // vector<vector<int>> sumOne(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumTwo(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumThree(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumFour(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumFive(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumSix(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumSeven(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumEight(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumNine(midPoint, vector<int>(midPoint, 0));
-        // vector<vector<int>> sumTen(midPoint, vector<int>(midPoint, 0));
 
         vector<vector<int>> aResult(midPoint, vector<int>(midPoint, 0));
         vector<vector<int>> bResult(midPoint, vector<int>(midPoint, 0));

@@ -9,8 +9,6 @@
 using namespace std;
 using namespace std::chrono;
 
-double measureTime(clock_t start, clock_t end);
-
 int main() {
     // Needed for random number generator
     
@@ -74,9 +72,4 @@ int main() {
     cout << endl;
     system("Pause");
     return 0;
-}
-
-
-double measureTime(clock_t start, clock_t end){
-    return ((end - start) / CLOCKS_PER_SEC) * 1000000.0;
 }
