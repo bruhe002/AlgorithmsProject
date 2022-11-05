@@ -341,63 +341,38 @@ void matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b, vec
         }
 
         //B12 - B22
-        // subMatrixStrauss(b, bRowStart, midPoint - 1, midPoint, bColEnd, b, midPoint, bRowEnd, midPoint, bColEnd, bResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         subMatrix(b12, b22, bResult, midPoint);
         matrixMultiplyStraussen(a11, bResult, productOne, midPoint);
         
         // A11 + a12
-        // addMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, aRowStart, midPoint - 1, midPoint, aColEnd, aResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(a11, a12, aResult, midPoint);
         matrixMultiplyStraussen(aResult, b22, productTwo, midPoint);
         
         // A21 + A22
-        // addMatrixStrauss(a, midPoint, aRowEnd, aColStart, midPoint - 1, a, midPoint, aRowEnd, midPoint, aColEnd, aResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(a21, a22, aResult, midPoint);
         matrixMultiplyStraussen(aResult, b11, productThree, midPoint);
         
         // B21 - B11
-        //subMatrixStrauss(b, midPoint, bRowEnd, bColStart, midPoint - 1, b, bRowStart, midPoint - 1, bColStart, midPoint - 1, bResult, 0, midPoint - 1, 0, midPoint -1, midPoint);
         subMatrix(b21, b11, bResult, midPoint);
         matrixMultiplyStraussen(a22, bResult, productFour, midPoint);
         
         // A11 + A22
-        //addMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, midPoint, aRowEnd, midPoint, aColEnd, aResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(a11, a22, aResult, midPoint);
         // B11 + B22
-        //addMatrixStrauss(b, bRowStart, midPoint - 1, bColStart, midPoint - 1, b, midPoint, bRowEnd, midPoint, bColEnd, bResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(b11, b22, bResult, midPoint);
         matrixMultiplyStraussen(aResult, bResult, productFive, midPoint);
         
         // A12 - A22
-        //subMatrixStrauss(a, aRowStart, midPoint - 1, midPoint, aColEnd, a, midPoint, aRowEnd, midPoint, aColEnd, aResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         subMatrix(a12, a22, aResult, midPoint);
         // B21 + B22
-        //addMatrixStrauss(b, midPoint, bRowEnd, bColStart, midPoint - 1, b, midPoint, bRowEnd, midPoint, bColEnd, bResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(b21, b22, bResult, midPoint);
         matrixMultiplyStraussen(aResult, bResult, productSix, midPoint);
         
         // A11 - A21
-        //subMatrixStrauss(a, aRowStart, midPoint - 1, aColStart, midPoint - 1, a, midPoint, aRowEnd, aColStart, midPoint - 1, aResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         subMatrix(a11, a21, aResult, midPoint);
         // B11 + B12
-        //addMatrixStrauss(b, bRowStart, midPoint - 1, bColStart, midPoint - 1, b, bRowStart, midPoint - 1, midPoint, bColEnd, bResult, 0, midPoint - 1, 0, midPoint - 1, midPoint);
         addMatrix(b11, b12, bResult, midPoint);
         matrixMultiplyStraussen(aResult, bResult, productSeven, midPoint);
-        
-        // //A11 * sumOne
-        
-        // //sumTwo * B22
-        // vector<vector<int>> productTwo = 
-        // //sumThree * B11
-        // vector<vector<int>> productThree = 
-        // //A22 * sumFour
-        // vector<vector<int>> productFour = 
-        // //SumFive * sumSix
-        // vector<vector<int>> productFive = 
-        // //sumSeven * sumEight
-        // vector<vector<int>> productSix = 
-        // //sumNine * sumTen
-        // vector<vector<int>> productSeven = 
 
         // Adding C11
         addMatrix(productSix, productFive, aResult, midPoint); 
@@ -430,17 +405,6 @@ void matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b, vec
             }
         }
 
-        // sumOne.clear();
-        // sumTwo.clear();
-        // sumThree.clear();
-        // sumFour.clear();
-        // sumFive.clear();
-        // sumSix.clear();
-        // sumSeven.clear();
-        // sumEight.clear();
-        // sumNine.clear();
-        // sumTen.clear();
-
         aResult.clear();
         bResult.clear();
 
@@ -451,10 +415,19 @@ void matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b, vec
         productFive.clear();
         productSix.clear();
         productSeven.clear();
-        // matrixMultiplyStraussen()
-        // vector<vector<int>> c12 (addMatrixStrauss(productOne, productTwo, midPoint));
-        // vector<vector<int>> c21 (addMatrixStrauss(productThree, productFour, midPoint));
-        // vector<vector<int>> c22 (addMatrixStrauss(productOne, subMatrixStrauss(productFive, subMatrixStrauss(productThree, productSeven, midPoint), midPoint), midPoint));
+
+        a11.clear();
+        a12.clear();
+        a21.clear();
+        a22.clear();
+        b11.clear();
+        b12.clear();
+        b21.clear();
+        b22.clear();
+        c11.clear();
+        c12.clear();
+        c21.clear();
+        c22.clear();
 
 
     }
