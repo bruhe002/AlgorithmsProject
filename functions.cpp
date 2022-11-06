@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <vector>
 #include <array>
 
@@ -40,8 +41,7 @@ void createMatrix(vector<vector<int>>& vect, int n) {
 
 
 // USE CASES involving Arrays
-
-void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
+void addMatrix(vector<vector<int>>& a, vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
     for(int row = 0; row < sizeN; row++) {
         for(int col = 0; col < sizeN; col++) {
             c[row][col] = a[row][col] + b[row][col];
@@ -49,7 +49,7 @@ void addMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vecto
     }
 }
 
-void subMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
+void subMatrix(vector<vector<int>>& a, vector<vector<int>>& b, vector<vector<int>>& c, int sizeN) {
     for(int row = 0; row < sizeN; row++) {
         for(int col = 0; col < sizeN; col++) {
             c[row][col] = a[row][col] - b[row][col];
@@ -57,8 +57,19 @@ void subMatrix(const vector<vector<int>>& a, const vector<vector<int>>& b, vecto
     }
 }
 
+bool powerOfTwo(int n) {
+    while(n > 1){
+        if (n % 2 != 0) {
+            return false;
+        }
+        n = n / 2;
+    }
+    return true;
+
+}
+
 // Brute force matrix multiplication
-vector<vector<int>> matrixMultiply(const vector<vector<int>>& a, const vector<vector<int>>& b, int sizeN) {
+vector<vector<int>> matrixMultiply(vector<vector<int>>& a, vector<vector<int>>& b, int sizeN) {
     // For each row of matrix A, we must multiply with each column of matrix B
     vector<vector<int>> product (sizeN, vector<int> (sizeN, 0));
     for(int rowA = 0; rowA < sizeN; rowA++) {
@@ -75,20 +86,54 @@ vector<vector<int>> matrixMultiply(const vector<vector<int>>& a, const vector<ve
 }
 
 // Regular Divide and conquer algorithm
-vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<vector<int>>& b) {
-    // Obtain sizes of vectors
-    int aCols = a[0].size();
-    int aRows = a.size();
-    int bCols = b[0].size();
-    int bRows = b.size();
-    vector<vector<int>> returnMatrix(aRows, vector<int> (bCols, 0));
+vector<vector<int>> matrixMultiplyDC(vector<vector<int>>& a, vector<vector<int>>& b, int sizeN) {
+    if (!powerOfTwo(sizeN)) {
+        // Not a power of 2
+        // Found out the closest greater power of two
+        int newExponent = ceil(log2(sizeN));
+        // cout << newExponent << endl;
+    
+        //Create new size of matrix
+        int newSize = pow(2, newExponent);
+        // cout << newSize << endl;
 
-    if(aCols == 1) {
+        //Create an array of Zeroes with new size
+        vector<int> padVect(newSize, 0);
+        // Pad matrix rows
+        for(int row = 0; row < sizeN; row++) {
+            for(int i = sizeN; i < newSize; i++) {
+                a[row].push_back(0);
+                b[row].push_back(0);
+                //Pad matrix columns
+                a.push_back(padVect);
+                b.push_back(padVect);
+            }
+        }
+        
+        cout << "Pass 1 loop" << endl;
+        
+        
+        
+        for(int i = sizeN; i < newSize; i++) {
+            
+            
+        }
+        // cout << "Pass loop 2" << endl;
+        //Update new size of matrix
+        sizeN = newSize;
+        // cout << newSize << endl;
+        padVect.clear();
+        
+    }
+    // Create New Matrix
+    vector<vector<int>> returnMatrix(sizeN, vector<int> (sizeN, 0));
+
+    if(sizeN == 1) {
         
         returnMatrix[0][0] = a[0][0] * b[0][0]; 
     }
     else {
-        int midPoint = bCols / 2;
+        int midPoint = sizeN / 2;
         
         // Set up partitions
         vector<vector<int>> a11 (midPoint, vector<int> (midPoint, 0));
@@ -124,16 +169,16 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
         } 
 
         // a11 * b11 + a12 * b21
-        addMatrix(matrixMultiplyDC(a11, b11), matrixMultiplyDC(a12, b21), c11, midPoint);
+        addMatrix(matrixMultiplyDC(a11, b11, midPoint), matrixMultiplyDC(a12, b21, midPoint), c11, midPoint);
 
         // a11 * b12 + a12 * b22
-        addMatrix(matrixMultiplyDC(a11, b12), matrixMultiplyDC(a12, b22), c12, midPoint);
+        addMatrix(matrixMultiplyDC(a11, b12, midPoint), matrixMultiplyDC(a12, b22, midPoint), c12, midPoint);
 
         // a21 * b11 + a22 * b21
-        addMatrix(matrixMultiplyDC(a21, b11), matrixMultiplyDC(a22, b21), c21, midPoint);
+        addMatrix(matrixMultiplyDC(a21, b11, midPoint), matrixMultiplyDC(a22, b21, midPoint), c21, midPoint);
 
         // a21 * b12 + a22 * b22
-        addMatrix(matrixMultiplyDC(a21, b12), matrixMultiplyDC(a22, b22), c22, midPoint);
+        addMatrix(matrixMultiplyDC(a21, b12, midPoint), matrixMultiplyDC(a22, b22, midPoint), c22, midPoint);
 
         //Combine the four quadrants
         for(int row = 0; row < midPoint; row++) {
@@ -171,10 +216,41 @@ vector<vector<int>> matrixMultiplyDC(const vector<vector<int>>& a, const vector<
 
 // Straussen's Algorithm
 void matrixMultiplyStraussen(vector<vector<int>>& a, vector<vector<int>>& b, vector<vector<int>>& c, int size) {
+    if (!powerOfTwo(size)) {
+        // Not a power of 2
+        // Found out the closest greater power of two
+        double newExponent = ceil(log2(size));
+        // cout << newExponent << endl;
+    
+        //Create new size of matrix
+        int newSize = pow(2, newExponent);
+        // Pad matrix rows
+        for(int row = 0; row < size; row++) {
+            for(int i = size; i < newSize; i++) {
+                a[row].push_back(0);
+                b[row].push_back(0);
+                c[row].push_back(0);
+            }
+        }
+        //Create an array of Zeroes with new size
+        vector<int> padVect(newSize, 0);
+        //Pad matrix columns
+        for(int i = size; i < newSize; i++) {
+            a.push_back(padVect);
+            b.push_back(padVect);
+            c.push_back(padVect);
+        }
+        //Update new size of matrix
+        size = newSize;
+        
+    }
+    
     if(size == 1) {
         c[0][0] = a[0][0] * b[0][0];
     }
     else {
+        
+
         int midPoint = size / 2;
 
         vector<vector<int>> aResult(midPoint, vector<int>(midPoint, 0));
